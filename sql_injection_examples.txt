@@ -1,0 +1,9 @@
+This file contains all popular SQL injections for testing
+
+Authentification field/login
+
+q'; or 1=1 --
+
+Search field
+
+
