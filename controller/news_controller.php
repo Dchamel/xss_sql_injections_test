@@ -3,7 +3,10 @@
 
     require_once 'connect.php';
     $title = $_POST['title'];
+    
     $content = $_POST['content'];
+//    $content = htmlentities($_POST['content'], ENT_QUOTES, 'UTF-8');
+//    $content = htmlspecialchars($_POST['content'], ENT_QUOTES, 'UTF-8');
     
     if (($title != '') && ($content != '')) {
 

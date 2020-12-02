@@ -1,7 +1,8 @@
-<?php session_start(); ?>
-<?php
-header("Content-Type: text/html; charset=utf-8");
+<?php 
+    session_start();
+//    header("Content-Type: text/html; charset=utf-8");
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -38,9 +39,31 @@ header("Content-Type: text/html; charset=utf-8");
         <?php 
             echo '<h2>News Time</h2>';
             require_once 'controller/connect.php';
-            $search_request = $_GET['search'];
+            
+//            $search_request = $_GET['search'];
+
+//            this two functions changing/deleting dangerous sequences from Search input
+//            Bouth of the are the same except that 
+//            
+//            htmlentities() convert all applicable characters to HTML entitie
+//            htmlspecialchars() convert special characters to HTML entities
+//
+//            For compare made simple test
+//            what will get to the DB after this functions from symbols
+//            First string without anything, second - htmlentities(), third - htmlspecialchars()
+//            ` ~ ! @ # $ % ^ &     * ( ) _ + = - ; '      \ "      : | , . / <    >    ?
+//            ` ~ ! @ # $ % ^ &amp; * ( ) _ + = - ; &#039;   &quot; : | , . / &lt; &gt; ?
+//            ` ~ ! @ # $ % ^ &amp; * ( ) _ + = - ; &#039;   &quot; : | , . / &lt; &gt; ?
+//            
+//            With HTML tags both functions doing the same:
+//            <a> - &lt;a&gt;
+//            <body> - &lt;body&gt;
+//            
+//            
+//            It's better to use both of this functions for output data.
+//
 //            $search_request = htmlentities($_GET['search'], ENT_QUOTES, 'UTF-8');
-//            $search_request = htmlspecialchars($_GET['search'], ENT_QUOTES, 'UTF-8');
+            $search_request = htmlspecialchars($_GET['search'], ENT_QUOTES, 'UTF-8');
             
             if(isset($search_request)) {
                 $query = "SELECT * FROM news WHERE (title LIKE '%$search_request%' or content LIKE '%$search_request%')";
