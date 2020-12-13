@@ -2,7 +2,6 @@
     session_start();
 //    header("Content-Type: text/html; charset=utf-8");
 ?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,7 +39,7 @@
             echo '<h2>News Time</h2>';
             require_once 'controller/connect.php';
             
-//            $search_request = $_GET['search'];
+            $search_request = $_GET['search'];
 
 //            this two functions changing/deleting dangerous sequences from Search input
 //            Bouth of the are the same except that 
@@ -59,11 +58,10 @@
 //            <a> - &lt;a&gt;
 //            <body> - &lt;body&gt;
 //            
-//            
 //            It's better to use both of this functions for output data.
 //
 //            $search_request = htmlentities($_GET['search'], ENT_QUOTES, 'UTF-8');
-            $search_request = htmlspecialchars($_GET['search'], ENT_QUOTES, 'UTF-8');
+//            $search_request = htmlspecialchars($_GET['search'], ENT_QUOTES, 'UTF-8');
             
             if(isset($search_request)) {
                 $query = "SELECT * FROM news WHERE (title LIKE '%$search_request%' or content LIKE '%$search_request%')";
@@ -83,8 +81,17 @@
             }
             else {
                 $query = "SELECT * FROM news";
-                $result = mysqli_query($connect_db, $query);
-                while ($news_arr = mysqli_fetch_assoc($result)) {
+
+//                procedural(proc)
+//                $result = mysqli_query($connect_db, $query);
+
+//                Object-Oriented Interface(obj)
+                $result = $connect_db->query($query);
+
+//                proc
+//                while ($news_arr = mysqli_fetch_assoc($result)) {
+
+                while ($news_arr = $result->fetch_assoc()) {
                     echo '<div class="news_view">';
                     echo '<h3>'.$news_arr['title'].'</h3>';
                     echo '<p>'.$news_arr['content'].'</p>';

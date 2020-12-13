@@ -2,8 +2,21 @@ This file contains all popular SQL injections for testing
 
 Authentification field/login
 
-q'; or 1=1 --
+q' or 1=1; -- 
+q' or 1=1; #
 
 Search field
 
 
+How to protect
+<---------------->
+mysql_real_escape_string
+mysqli_real_escape_string
+
+check unstring types for example
+$q = "SELECT * FROM `tab` WHERE `id` = ".$_GET['user_id'];
+$q = "SELECT * FROM `tab` WHERE `id` = ".intval($_GET['user_id']);
+
+use prepared statement 
+
+use PDO
