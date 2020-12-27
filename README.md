@@ -20,5 +20,12 @@ index.php
 
 [OWASP - about XSS](https://owasp.org/www-community/attacks/xss/)  
 
+Test SQL-Injections for few DB ver  
+MariaDB 5.5, MySQL 5.5 (& x64), 5.6  
+
+Main target was Search Field  
+Now tests complited for procedural and object-oriented interface  
+Nex "Episode" test for the PDO (The PHP Data Objects)  
+
 Connection to DB:  
 controller/connect.php
