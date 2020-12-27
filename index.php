@@ -1,6 +1,34 @@
 <?php 
     session_start();
 //    header("Content-Type: text/html; charset=utf-8");
+    
+    require_once 'controller/connect.php';
+    
+//    Create table. I made it only for testing SQL_Injections 
+//    through Search field on different DB versions
+//    Tested versions:
+//    MariaDB 5.5, MySQL 5.5 (& x64), 5.6, 5.7, 8.0 x64 (table creation - OK)
+//    In versions 5.7 and 8.0 user data won`t write down to the DB
+//    For what purpose did I do all this ?
+//    - To see for myself if there are any "pitfalls".
+
+    $query_db_create_users = "CREATE TABLE IF NOT EXISTS users("
+            . "id INT(11) PRIMARY KEY AUTO_INCREMENT,"
+            . "login VARCHAR(100),"
+            . "pass VARCHAR(100),"
+            . "creation_time DATETIME"
+            . ") CHARACTER SET utf8 COLLATE utf8_general_ci";
+    
+    $query_db_create_news = "CREATE TABLE IF NOT EXISTS news("
+            . "id INT(11) AUTO_INCREMENT PRIMARY KEY,"
+            . "title VARCHAR(300),"
+            . "content VARCHAR(1000),"
+            . "creation_time DATETIME"
+            . ") CHARACTER SET utf8 COLLATE utf8_general_ci";
+    
+    $connect_db->query($query_db_create_users) ? print '<div>Table Users - OK</div>' : print $connect_db->error.'</br>';
+    $connect_db->query($query_db_create_news) ? print '<div>Table News - OK</div>' : print $connect_db->error.'</br>';
+    
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +65,6 @@
         <!--news-->
         <?php 
             echo '<h2>News Time</h2>';
-            require_once 'controller/connect.php';
             
             $search_request = $_GET['search'];
 
@@ -67,22 +94,22 @@
                 $query = "SELECT * FROM news WHERE title LIKE '%$search_request%' OR content LIKE '%$search_request%'";
 
 //                proc
-                $result = mysqli_query($connect_db, $query);
+//                $result = mysqli_query($connect_db, $query);
 
 //                obj
-//                $result = $connect_db->query($query);
+                $result = $connect_db->query($query);
 
 //                proc
-                if (mysqli_num_rows($result)) {
+//                if (mysqli_num_rows($result)) {
 
 //                obj
-//                if ($result -> num_rows) {
+                if ($result -> num_rows) {
 
 //                    proc  
-                    while ($news_arr = mysqli_fetch_assoc($result)) {
+//                    while ($news_arr = mysqli_fetch_assoc($result)) {
                       
 //                      obj
-//                    while ($news_arr = $result->fetch_assoc()) {
+                    while ($news_arr = $result->fetch_assoc()) {
                         echo '<div class="news_view">';
                         echo '<h3>'.$news_arr['title'].'</h3>';
                         echo '<p>'.$news_arr['content'].'</p>';

