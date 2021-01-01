@@ -12,11 +12,16 @@
 
 //        $creation_time = date('H:i:s d-m-Y');
         
-        $query = "INSERT INTO `news` (`id`, `title`, `content`, `creation_time`) VALUES ('NULL', '$title', '$content', now())";
-        mysqli_query($connect_db, $query);
-        
-        $_SESSION['msg'] = "Thr news successfully added .";
-        header('Location: ../news.php');
+        $query = "INSERT INTO `news` (`title`, `content`, `creation_time`) VALUES ('$title', '$content', now())";
+        if ($connect_db->query($query)) {
+            $_SESSION['msg'] = "The news successfully added .";
+            header('Location: ../news.php');
+        }
+        else {
+            $_SESSION['msg'] = $connect_db->error;
+            header('Location: ../index.php');
+        }
+
     }
     else {
         $_SESSION['msg'] = 'Empty field detected';      

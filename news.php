@@ -13,6 +13,8 @@
         <link rel="stylesheet" href="assets/css/main.css">
     </head>
     <body>
+        <h3>Hello, <?php echo $_SESSION['username'] ?> !</h3>
+        <a href="/">Log out</a>
         <form class="news" action="controller/news_controller.php" method="post">
             <fieldset>
                 <legend>Add news</legend>

